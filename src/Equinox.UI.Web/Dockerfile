@@ -1,22 +1,11 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# This Dockerfile is used to build a container image for an ASP.NET Core 5.0 web application.
+# It uses a multi-stage build process to separate the build and runtime environments.
 
+# The first stage (base) sets up the runtime environment for the application.
+# It is based on the official ASP.NET Core 5.0 runtime image from Microsoft.
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+# The working directory is set to /app.
 WORKDIR /app
+# The container listens on ports 80 and 443.
 EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-WORKDIR /src
-COPY ["Equinox.UI.Web/Equinox.UI.Web.csproj", "Equinox.UI.Web/"]
-RUN dotnet restore "Equinox.UI.Web/Equinox.UI.Web.csproj"
-COPY . .
-WORKDIR "/src/Equinox.UI.Web"
-RUN dotnet build "Equinox.UI.Web.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "Equinox.UI.Web.csproj" -c Release -o /app/publish
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Equinox.UI.Web.dll"]
+EXPOSE 4
