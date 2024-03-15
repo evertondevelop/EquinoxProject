@@ -2,13 +2,15 @@
 # ---------------------------------
 #
 # This section of the code specifies the supported funding model platforms for the developer.
-# Currently, only Patreon is supported.
+# Currently, Patreon and GitHub Sponsors are supported.
 #
 # Format:
 #   [platform]: [username]
 #
 # Example:
 #   patreon: eduardopires
+#   github_sponsors: [username]
 
 patreon: eduardopires
+github_sponsors: [githubusername]
 
