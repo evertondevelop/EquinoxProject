@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -5,13 +6,12 @@ using Microsoft.Extensions.Options;
 using NetDevPack.Identity.Jwt;
 using NetDevPack.Identity.Model;
 
-namespace Equinox.Services.Api.Controllers // AccountController handles user registration and login
+namespace Equinox.Services.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ApiController
+    public class AccountController : ControllerBase
     {
-        // Dependency injection for SignInManager, UserManager, and AppJwtSettings
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
@@ -26,12 +26,11 @@ namespace Equinox.Services.Api.Controllers // AccountController handles user reg
             _appJwtSettings = appJwtSettings.Value;
         }
 
-        // Registers a new user with the provided RegisterUser object
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult> Register(RegisterUser registerUser)
+        public async Task<IActionResult> Register([FromBody] RegisterUser registerUser)
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = new IdentityUser
             {
@@ -44,43 +43,40 @@ namespace Equinox.Services.Api.Controllers // AccountController handles user reg
 
             if (result.Succeeded)
             {
-                return CustomResponse(GetFullJwt(user.Email));
+                return Ok(GetFullJwt(user.Email));
             }
 
             foreach (var error in result.Errors)
             {
-                AddError(error.Description);
+                ModelState.AddModelError("", error.Description);
             }
 
-            return CustomResponse();
+            return BadRequest(ModelState);
         }
 
-        // Logs in a user with the provided LoginUser object
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(LoginUser loginUser)
+        public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
 
             if (result.Succeeded)
             {
-                var fullJwt = GetFullJwt(loginUser.Email);
-                return CustomResponse(fullJwt);
+                return Ok(GetFullJwt(loginUser.Email));
             }
 
             if (result.IsLockedOut)
             {
-                AddError("This user is temporarily blocked");
-                return CustomResponse();
+                ModelState.AddModelError("", "This user is temporarily blocked");
+                return BadRequest(ModelState);
             }
 
-            AddError("Incorrect user or password");
-            return CustomResponse();
+            ModelState.AddModelError("", "Incorrect user or password");
+            return BadRequest(ModelState);
         }
 
-        // Generates a full JWT token for the given email
         private string GetFullJwt(string email)
         {
             return new JwtBuilder()
@@ -94,4 +90,3 @@ namespace Equinox.Services.Api.Controllers // AccountController handles user reg
         }
     }
 }
-
