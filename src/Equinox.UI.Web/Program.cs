@@ -7,7 +7,14 @@ namespace Equinox.UI.Web
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine($"An error occurred while starting the application: {ex.Message}");
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
