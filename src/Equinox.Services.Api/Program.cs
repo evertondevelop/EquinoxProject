@@ -1,22 +1,36 @@
-using Microsoft.AspNetCore.Hosting; // Required for using the IWebHost interface
-using Microsoft.Extensions.Hosting; // Required for using the IHostBuilder interface
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging; // Required for using the ConsoleLoggerOptions class
 
-namespace Equinox.Services.Api // The namespace for the Equinox API services
+#if (CSHARP_VERSION >= 9)
+using global::System; // Required for top-level statements in C# 9.0 or later
+#endif
+
+namespace Equinox.Services.Api
 {
-    public class Program // The main class for the application
+    [Description("The main class for the Equinox API services.")]
+    [Version("1.0.0")]
+    public static class Program
     {
-        public static void Main(string[] args) // The entry point of the application
+        public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run(); // Create the host, build it, and start it
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) // Method to create the host builder
-        {
-            return Host.CreateDefaultBuilder(args) // Create a default host builder with common configurations
-                .ConfigureWebHostDefaults(webBuilder => // Configure the web host builder
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>(); // Use the Startup class for configuring the web host
+                    webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(loggingBuilder =>
+                {
+#if (CSHARP_VERSION >= 9)
+                    loggingBuilder.ClearProviders(); // Clear all existing logging providers
+#else
+                    loggingBuilder.AddConsole(); // Add the console logging provider
+#endif
+                    loggingBuilder.SetMinimumLevel(LogLevel.Debug); // Set the minimum log level to Debug
                 });
-        }
     }
 }
