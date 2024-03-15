@@ -1,3 +1,11 @@
-﻿@using Equinox.UI.Web
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper "*, Equinox.UI.Web"
+@{
+    // Using a namespace called "Equinox.UI.Web"
+    @using Equinox.UI.Web
+
+    // Adding support for built-in HTML helpers and tag helpers
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+    // Adding support for custom tag helpers defined in the "Equinox.UI.Web" namespace
+    @addTagHelper "*, Equinox.UI.Web"
+}
+
