@@ -1,3 +1,7 @@
+@*
+This Razor view displays a confirmation page for deleting a customer.
+It uses the CustomerViewModel as its model.
+*@
 @model Equinox.Application.ViewModels.CustomerViewModel
 
 @{
@@ -7,36 +11,42 @@
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Delete">
+    <*!- Display a summary of the customer data using a custom helper 'vc:summary' -->*
     <vc:summary />
 
     <h3>Are you sure you want to delete the @Model.Name?</h3>
     <div>
         <hr />
+        <*!- Display the customer details using HTML helpers -->*
         <dl class="dl-horizontal">
             <dt>
+                @* Display the customer's name label -->*@
                 @Html.DisplayNameFor(model => model.Name)
             </dt>
             <dd>
+                @* Display the customer's name value -->*@
                 @Html.DisplayFor(model => model.Name)
             </dd>
             <dt>
+                @* Display the customer's email label -->*@
                 @Html.DisplayNameFor(model => model.Email)
             </dt>
             <dd>
+                @* Display the customer's email value -->*@
                 @Html.DisplayFor(model => model.Email)
             </dd>
             <dt>
+                @* Display the customer's birth date label -->*@
                 @Html.DisplayNameFor(model => model.BirthDate)
             </dt>
             <dd>
+                @* Display the customer's birth date value -->*@
                 @Html.DisplayFor(model => model.BirthDate)
             </dd>
         </dl>
 
 
         <div class="form-actions no-color">
+            <*!- Submit button for deleting the customer -->*
             <input type="submit" value="Delete" class="btn btn-danger" />
-            <a asp-action="Index" class="btn btn-info">Back to List</a>
-        </div>
-    </div>
-</form>
+            <*!- Back to list link
