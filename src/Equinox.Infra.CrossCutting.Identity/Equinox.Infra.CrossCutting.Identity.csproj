@@ -1,17 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable> <!-- Add nullable annotations to enable nullable warning/error checks -->
+  </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Equinox.Domain\Equinox.Domain.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Equinox.Domain\Equinox.Domain.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
-		<PackageReference Include="NetDevPack.Identity" Version="1.2.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
+    <PackageReference Include="NetDevPack.Identity" Version="1.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5" PrivateAssets="all" />
+    <!-- Add 'PrivateAssets="all"' to 'Microsoft.EntityFrameworkCore.Design' to avoid package reference warnings -->
+  </ItemGroup>
 
 </Project>
