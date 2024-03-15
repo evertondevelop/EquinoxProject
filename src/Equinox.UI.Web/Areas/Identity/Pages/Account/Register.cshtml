@@ -1,7 +1,7 @@
-﻿@page
-@model RegisterModel
+@page // This line defines an Razor page
+@model RegisterModel // The model for this page is RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Register"; // The title of the page is "Register"
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -13,21 +13,21 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                <label asp-for="Input.Email"></label> // Label for the Email input field
+                <input asp-for="Input.Email" class="form-control" /> // The Email input field
+                <span asp-validation-for="Input.Email" class="text-danger"></span> // Validation message for the Email field
             </div>
             <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <label asp-for="Input.Password"></label> // Label for the Password input field
+                <input asp-for="Input.Password" class="form-control" /> // The Password input field
+                <span asp-validation-for="Input.Password" class="text-danger"></span> // Validation message for the Password field
             </div>
             <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                <label asp-for="Input.ConfirmPassword"></label> // Label for the ConfirmPassword input field
+                <input asp-for="Input.ConfirmPassword" class="form-control" /> // The ConfirmPassword input field
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span> // Validation message for the ConfirmPassword field
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Register</button> // Register button
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
@@ -49,9 +49,9 @@
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                         <div>
                             <p>
-                                @foreach (var provider in Model.ExternalLogins)
+                                @foreach (var provider in Model.ExternalLogins) // Iterate through the ExternalLogins collection
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button> // Buttons for external login providers
                                 }
                             </p>
                         </div>
@@ -63,5 +63,6 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" /> // Include validation scripts
 }
+
