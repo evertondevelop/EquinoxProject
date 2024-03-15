@@ -2,39 +2,26 @@
 @model Equinox.Application.ViewModels.CustomerViewModel
 
 @{
-    *@ The ViewData dictionary is used to pass data from the controller to the view. Here, it is being used to set the title of the page. *@
     ViewData["Title"] = "Edit Customer";
 }
 
-<h2>@ViewData["Title"]</h2> *@{@* This creates an <h2> tag with the value of ViewData["Title"] as its content. *@}
+<h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit"> *@{@* This creates an HTML form that submits to the "Edit" action in the current controller. *@}
-    <div class="form-horizontal"> *@{@* This sets the class attribute of the form element to "form-horizontal". *@}
-        <hr /> *@{@* This creates a horizontal rule. *@}
+<form asp-action="Edit" method="post">
+    <div class="form-horizontal">
+        <hr />
+        <input type="hidden" asp-for="Id" />
 
-        <input type="hidden" asp-for="Id" /> *@{@* This creates a hidden input field that is bound to the "Id" property of the model. *@}
+        <vc:validation-summary />
 
-        *@ The following code creates a custom ViewComponent as a TagHelper for displaying validation summary. *@
-        <vc:summary />
-
-        <div class="form-group"> *@{@* This sets the class attribute of the div element to "form-group". *@}
-            <label asp-for="Name" class="col-md-2 control-label"></label> *@{@* This creates a label element that is bound to the "Name" property of the model. *@}
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Name" class="form-control" /> *@{@* This creates an input element that is bound to the "Name" property of the model. *@}
-                <span asp-validation-for="Name" class="text-danger"></span> *@{@* This creates a span element that displays any validation errors for the "Name" property. *@}
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-group">
             <label asp-for="Email" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="BirthDate" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="BirthDate" class="form-control" />
-                <span
+            <div class="col-md-1
