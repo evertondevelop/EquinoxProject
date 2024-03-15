@@ -1,17 +1,30 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // Needed to inherit from IdentityDbContext
-using Microsoft.EntityFrameworkCore;                    // Needed for database context
+// Add using directives for required namespaces
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Equinox.UI.Web.Models; // Include the ApplicationUser model definition
 
+// Define the custom ApplicationDbContext class that inherits from IdentityDbContext<ApplicationUser>
 namespace Equinox.UI.Web.Data
 {
-    // ApplicationDbContext: Custom database context that inherits from IdentityDbContext
-    // to include ASP.NET Core Identity functionality (e.g. user management).
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        // Constructor: Injects DbContextOptions<ApplicationDbContext> via dependency injection
-        // to configure the database connection and other options.
+        // Constructor: Inject DbContextOptions<ApplicationDbContext> via dependency injection
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+        }
+
+        // Override the OnModelCreating method to configure the model
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            // Configure the ApplicationUser entity
+            builder.Entity<ApplicationUser>(entity =>
+            {
+                entity.ToTable(name: "Users");
+            });
         }
     }
 }
