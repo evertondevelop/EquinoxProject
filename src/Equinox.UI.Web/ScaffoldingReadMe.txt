@@ -2,10 +2,18 @@
 // This feature enables user management, including authentication,
 // authorization, and user data protection.
 //
-// For setup and configuration instructions, refer to the official
+// To set up and configure ASP.NET Core Identity, refer to the official
 // Microsoft documentation at the following link:
-// https://go.microsoft.com/fwlink/?linkid=2116645.
+// https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-5.0&tabs=visual-studio
 //
-// The documentation covers various aspects of Identity setup,
-// such as adding Identity services, configuring Identity options,
-// and setting up user interface for user management.
+// The documentation covers various aspects of Identity setup, such as:
+// 1. Adding Identity services
+// 2. Configuring Identity options
+// 3. Setting up user interface for user management
+
+services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    // Configure Identity options here
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
