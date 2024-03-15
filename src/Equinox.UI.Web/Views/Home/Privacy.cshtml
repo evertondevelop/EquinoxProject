@@ -1,9 +1,17 @@
-// Setting the ViewData["Title"] property to "Privacy Policy"
-ViewData["Title"] = "Privacy Policy";
+using System.ComponentModel.DataAnnotations;
 
-// Rendering the title of the page using the ViewData["Title"] property
-<h1>@ViewData["Title"]</h1>
+public class PrivacyPolicyViewModel
+{
+    [Required]
+    [Display(Name = "Title")]
+    public string Title { get; set; }
 
-// Displaying a paragraph element with information about the site's privacy policy
-<p>Use this page to detail your site's privacy policy.</p>
+    [Display(Name = "Policy")]
+    public string Policy { get; set; }
+}
+
+@model PrivacyPolicyViewModel
+
+<h1>@Model.Title</h1>
+<p>@Model.Policy</p>
 
