@@ -10,43 +10,46 @@ It uses the CustomerViewModel as its model.
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Delete">
-    <*!- Display a summary of the customer data using a custom helper 'vc:summary' -->*
+<form asp-action="Delete" method="post">
+    <*!- Display a summary of the customer data using a custom helper 'vc:summary' -->*@
     <vc:summary />
 
     <h3>Are you sure you want to delete the @Model.Name?</h3>
     <div>
         <hr />
-        <*!- Display the customer details using HTML helpers -->*
+        <*!- Display the customer details using HTML helpers -->*@
         <dl class="dl-horizontal">
             <dt>
                 @* Display the customer's name label -->*@
-                @Html.DisplayNameFor(model => model.Name)
+                <label for="Name">Name:</label>
             </dt>
             <dd>
                 @* Display the customer's name value -->*@
-                @Html.DisplayFor(model => model.Name)
+                <span id="Name">@Model.Name</span>
             </dd>
             <dt>
                 @* Display the customer's email label -->*@
-                @Html.DisplayNameFor(model => model.Email)
+                <label for="Email">Email:</label>
             </dt>
             <dd>
                 @* Display the customer's email value -->*@
-                @Html.DisplayFor(model => model.Email)
+                <span id="Email">@Model.Email</span>
             </dd>
             <dt>
                 @* Display the customer's birth date label -->*@
-                @Html.DisplayNameFor(model => model.BirthDate)
+                <label for="BirthDate">Birth Date:</label>
             </dt>
             <dd>
                 @* Display the customer's birth date value -->*@
-                @Html.DisplayFor(model => model.BirthDate)
+                <span id="BirthDate">@Model.BirthDate.ToShortDateString()</span>
             </dd>
         </dl>
 
-
         <div class="form-actions no-color">
-            <*!- Submit button for deleting the customer -->*
-            <input type="submit" value="Delete" class="btn btn-danger" />
-            <*!- Back to list link
+            <*!- Submit button for deleting the customer -->*@
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <*!- Back to list link -->*@
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</form>
