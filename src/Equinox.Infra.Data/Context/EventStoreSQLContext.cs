@@ -1,25 +1,40 @@
-using Equinox.Domain.Core.Events; // Needed for working with domain events
-using Equinox.Infra.Data.Mappings;   // Needed for configuring database mappings
-using Microsoft.EntityFrameworkCore; // Needed for using Entity Framework Core
+using Equinox.Domain.Core.Events;
+using Equinox.Infra.Data.Mappings;
+using Microsoft.EntityFrameworkCore;
 
-namespace Equinox.Infra.Data.Context // Namespace for the database context
+namespace Equinox.Infra.Data.Context
 {
-    public class EventStoreSqlContext : DbContext // Class for the database context
+    public class EventStoreSqlContext : DbContext
     {
-        // Constructor for the database context that accepts options for configuration
-        public EventStoreSqlContext(DbContextOptions<EventStoreSqlContext> options) : base(options) { }
+        public EventStoreSqlContext(DbContextOptions<EventStoreSqlContext> options) : base(options)
+        {
+        }
 
-        // Database set for the StoredEvent entity
-        public DbSet<StoredEvent> StoredEvent { get; set; }
+        public DbSet<StoredEvent> StoredEvents { get; set; }
 
-        // Method called when the model is being created
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Apply the StoredEventMap configuration to the model builder
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
             modelBuilder.ApplyConfiguration(new StoredEventMap());
 
-            // Call the base implementation of OnModelCreating
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (optionsBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(optionsBuilder));
+            }
+
+            // Add any necessary configuration options here, such as connection strings
+            optionsBuilder.UseSqlServer("your-connection-string-here");
+
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }
