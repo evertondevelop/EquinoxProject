@@ -1,16 +1,17 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NetDevPack.Identity.Jwt;
 using NetDevPack.Identity.Model;
 
-namespace Equinox.Services.Api.Controllers
+namespace Equinox.Services.Api.Controllers // AccountController handles user registration and login
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ApiController
     {
+        // Dependency injection for SignInManager, UserManager, and AppJwtSettings
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppJwtSettings _appJwtSettings;
@@ -25,6 +26,7 @@ namespace Equinox.Services.Api.Controllers
             _appJwtSettings = appJwtSettings.Value;
         }
 
+        // Registers a new user with the provided RegisterUser object
         [HttpPost]
         [Route("register")]
         public async Task<ActionResult> Register(RegisterUser registerUser)
@@ -53,6 +55,7 @@ namespace Equinox.Services.Api.Controllers
             return CustomResponse();
         }
 
+        // Logs in a user with the provided LoginUser object
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginUser loginUser)
@@ -77,6 +80,7 @@ namespace Equinox.Services.Api.Controllers
             return CustomResponse();
         }
 
+        // Generates a full JWT token for the given email
         private string GetFullJwt(string email)
         {
             return new JwtBuilder()
@@ -90,3 +94,4 @@ namespace Equinox.Services.Api.Controllers
         }
     }
 }
+
