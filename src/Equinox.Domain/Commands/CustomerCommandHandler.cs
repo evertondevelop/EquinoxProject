@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Equinox.Domain.Events; // Namespace for domain events
@@ -10,10 +11,9 @@ using NetDevPack.Messaging; // Namespace for request/response objects and valida
 
 namespace Equinox.Domain.Commands // Namespace for commands and command handlers
 {
-    public class CustomerCommandHandler : CommandHandler, // Inherits from base CommandHandler class
-        IRequestHandler<RegisterNewCustomerCommand, ValidationResult>, // Handles RegisterNewCustomerCommand
-        IRequestHandler<UpdateCustomerCommand, ValidationResult>, // Handles UpdateCustomerCommand
-        IRequestHandler<RemoveCustomerCommand, ValidationResult> // Handles RemoveCustomerCommand
+    public class CustomerCommandHandler : IRequestHandler<RegisterNewCustomerCommand, ICommandResult>,
+        IRequestHandler<UpdateCustomerCommand, ICommandResult>,
+        IRequestHandler<RemoveCustomerCommand, ICommandResult>
     {
         private readonly ICustomerRepository _customerRepository; // Customer repository instance
 
@@ -24,10 +24,10 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
         }
 
         // Handles RegisterNewCustomerCommand
-        public async Task<ValidationResult> Handle(RegisterNewCustomerCommand message, CancellationToken cancellationToken)
+        public async Task<ICommandResult> Handle(RegisterNewCustomerCommand message, CancellationToken cancellationToken)
         {
             // Validate the incoming command
-            if (!message.IsValid()) return message.ValidationResult;
+            if (!message.IsValid()) return new CommandResult(message.ValidationResult, false);
 
             // Create a new Customer instance with the provided data
             var customer = new Customer(Guid.NewGuid(), message.Name, message.Email, message.BirthDate);
@@ -37,7 +37,7 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
             {
                 // If so, add an error to the validation result
                 AddError("The customer e-mail has already been taken.");
-                return ValidationResult;
+                return new CommandResult(ValidationResult, false);
             }
 
             // Add a CustomerRegisteredEvent domain event to the customer instance
@@ -45,14 +45,16 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
 
             // Add the customer to the repository and commit the changes
             _customerRepository.Add(customer);
-            return await Commit(_customerRepository.UnitOfWork);
+            await _customerRepository.Commit();
+
+            return new CommandResult(customer, true);
         }
 
         // Handles UpdateCustomerCommand
-        public async Task<ValidationResult> Handle(UpdateCustomerCommand message, CancellationToken cancellationToken)
+        public async Task<ICommandResult> Handle(UpdateCustomerCommand message, CancellationToken cancellationToken)
         {
             // Validate the incoming command
-            if (!message.IsValid()) return message.ValidationResult;
+            if (!message.IsValid()) return new CommandResult(message.ValidationResult, false);
 
             // Create a new Customer instance with the provided data
             var customer = new Customer(message.Id, message.Name, message.Email, message.BirthDate);
@@ -67,7 +69,7 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
                 {
                     // If so, add an error to the validation result
                     AddError("The customer e-mail has already been taken.");
-                    return ValidationResult;
+                    return new CommandResult(ValidationResult, false);
                 }
             }
 
@@ -76,14 +78,16 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
 
             // Update the customer in the repository and commit the changes
             _customerRepository.Update(customer);
-            return await Commit(_customerRepository.UnitOfWork);
+            await _customerRepository.Commit();
+
+            return new CommandResult(customer, true);
         }
 
         // Handles RemoveCustomerCommand
-        public async Task<ValidationResult> Handle(RemoveCustomerCommand message, CancellationToken cancellationToken)
+        public async Task<ICommandResult> Handle(RemoveCustomerCommand message, CancellationToken cancellationToken)
         {
             // Validate the incoming command
-            if (!message.IsValid()) return message.ValidationResult;
+            if (!message.IsValid()) return new CommandResult(message.ValidationResult, false);
 
             // Get the customer from the repository
             var customer = await _customerRepository.GetById(message.Id);
@@ -92,7 +96,7 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
             if (customer is null)
             {
                 AddError("The customer doesn't exists.");
-                return ValidationResult;
+                return new CommandResult(ValidationResult, false);
             }
 
             // Add a CustomerRemovedEvent domain event to the customer instance
@@ -100,7 +104,9 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
 
             // Remove the customer from the repository and commit the changes
             _customerRepository.Remove(customer);
-            return await Commit(_customerRepository.UnitOfWork);
+            await _customerRepository.Commit();
+
+            return new CommandResult(customer, true);
         }
 
         // Dispose of the customer repository
@@ -110,3 +116,4 @@ namespace Equinox.Domain.Commands // Namespace for commands and command handlers
         }
     }
 }
+
