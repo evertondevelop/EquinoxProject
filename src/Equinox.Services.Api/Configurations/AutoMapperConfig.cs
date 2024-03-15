@@ -1,16 +1,9 @@
-﻿using System;
-using Equinox.Application.AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Equinox.Services.Api.Configurations
+public void ConfigureServices(IServiceCollection services)
 {
-    public static class AutoMapperConfig
-    {
-        public static void AddAutoMapperConfiguration(this IServiceCollection services)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+    services.AddControllers();
 
-            services.AddAutoMapper(typeof(DomainToViewModelMappingProfile), typeof(ViewModelToDomainMappingProfile));
-        }
-    }
+    // Other service registrations...
+
+    // Configure AutoMapper
+    AutoMapperConfig.AddAutoMapperConfiguration(services);
 }
