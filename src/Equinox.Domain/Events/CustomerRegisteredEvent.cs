@@ -1,5 +1,4 @@
-﻿using System;
-using NetDevPack.Messaging;
+using System;
 
 namespace Equinox.Domain.Events
 {
@@ -13,12 +12,13 @@ namespace Equinox.Domain.Events
             BirthDate = birthDate;
             AggregateId = id;
         }
-        public Guid Id { get; set; }
 
-        public string Name { get; private set; }
+        public Guid Id { get; }
 
-        public string Email { get; private set; }
+        public string Name { get; }
 
-        public DateTime BirthDate { get; private set; }
+        public string Email { get; }
+
+        public DateTime BirthDate { get; }
     }
 }
