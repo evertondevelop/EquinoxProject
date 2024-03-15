@@ -1,8 +1,9 @@
-﻿using Equinox.Domain.Core.Events;
+using Equinox.Domain.Core.Events;
 using Equinox.Infra.Data.Repository.EventSourcing;
 using NetDevPack.Identity.User;
 using NetDevPack.Messaging;
 using Newtonsoft.Json;
+using System;
 
 namespace Equinox.Infra.Data.EventSourcing
 {
@@ -19,21 +20,23 @@ namespace Equinox.Infra.Data.EventSourcing
 
         public void Save<T>(T theEvent) where T : Event
         {
-            // Using Newtonsoft.Json because System.Text.Json
-            // is a sad joke to be considered "Done"
+            try
+            {
+                var serializedData = JsonConvert.SerializeObject(theEvent);
 
-            // The System.Text don't know how serialize a
-            // object with inherited properties, I said is sad...
-            // Yes! I tried: options = new JsonSerializerOptions { WriteIndented = true };
+                var storedEvent = new StoredEvent(
+                    theEvent,
+                    serializedData,
+                    _user.Name ?? _user.GetUserEmail(),
+                    "Equinox.Domain.Core.Events");
 
-            var serializedData = JsonConvert.SerializeObject(theEvent);
-
-            var storedEvent = new StoredEvent(
-                theEvent,
-                serializedData,
-                _user.Name ?? _user.GetUserEmail());
-
-            _eventStoreRepository.Store(storedEvent);
+                _eventStoreRepository.Store(storedEvent);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                Console.WriteLine($"Error while serializing event: {ex.Message}");
+            }
         }
     }
 }
