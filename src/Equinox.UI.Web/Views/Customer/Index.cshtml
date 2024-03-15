@@ -1,22 +1,24 @@
-@model IEnumerable<Equinox.Application.ViewModels.CustomerViewModel>
+@using Equinox.Application.ViewModels
+@model IEnumerable<CustomerViewModel>
 
 @{
     ViewData["Title"] = "Customer Management";
 }
 
-
 <style>
     .modal-lg {
         max-width: 80%;
     }
-</style>
 
+    table.customer-table {
+        width: 100%;
+    }
+</style>
 
 <div>
     <h2>@ViewData["Title"]</h2>
 </div>
 <hr />
-
 
 <div class="row">
     <div class="col-md-12">
@@ -31,45 +33,53 @@
 </div>
 <br />
 
-
 <div class="panel panel-default">
-    <table class="table table-striped">
+    <table class="table table-striped customer-table">
         <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BirthDate)
-            </th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BirthDate)
+                </th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BirthDate)
-                </td>
-                <td>
-                    <!-- Actions to edit, view details, delete, and view history are displayed here -->
-                </td>
-            </tr>
-        }
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BirthDate)
+                        </td>
+                        <td>
+                            <!-- Actions to edit, view details, delete, and view history are displayed here -->
+                            <button class="btn btn-primary viewbutton" data-id="@item.Id">View History</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">No customers found.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
-
 
 <div class="modal fade" id="customerHistory" tabindex="-1" role="dialog" aria-labelledby="historyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -81,7 +91,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="customerHistoryData"></p>
+                <p id="customerHistoryData">Loading...</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -90,35 +100,42 @@
     </div>
 </div>
 
-
 @section scripts
 {
     <script type="text/javascript">
-        $(".viewbutton").on("click", function() {
+        $(".viewbutton").on("click", function () {
             var customerId = $(this).data('id');
+            $("#customerHistoryData").html("Loading...");
             $.ajax({
-                url: "https://localhost:44314/customer-management/customer-history/" + customerId,
-                //url: "http://equinoxproject.azurewebsites.net/customer-management/customer-history/" + customerId,
+                url: "@Url.Action("CustomerHistory", "CustomerManagement")/" + customerId,
                 cache: false
-            }).done(function(data) {
-                var formatHtml = "<table class='table table-striped'>";
-                formatHtml += "<thead><th>Action</th><th>When</th><th>Id</th><th>Name</th><th>E-mail</th><th>Birth Date</th><th>By User</th></thead>";
+            }).done(function (data) {
+                try {
+                    if (data && data.length > 0) {
+                        var formatHtml = "<table class='table table-striped'>";
+                        formatHtml += "<thead><th>Action</th><th>When</th><th>Id</th><th>Name</th><th>E-mail</th><th>Birth Date</th><th>By User</th></thead>";
 
-                for (var i = 0; i < data.length; i++) {
-                    var change = data[i];
-                    formatHtml += "<tr>";
-                    formatHtml += "<td>" + change.action + "</td>";
-                    formatHtml += "<td>" + change.timestamp + "</td>";
-                    formatHtml += "<td>" + change.id + "</td>";
-                    formatHtml += "<td>" + change.name + "</td>";
-                    formatHtml += "<td>" + change.email + "</td>";
-                    formatHtml += "<td>" + change.birthDate + "</td>";
-                    formatHtml += "<td>" + change.who + "</td>";
-                    formatHtml += "</tr>";
+                        for (var i = 0; i < data.length; i++) {
+                            var change = data[i];
+                            formatHtml += "<tr>";
+                            formatHtml += "<td>" + change.action + "</td>";
+                            formatHtml += "<td>" + change.timestamp + "</td>";
+                            formatHtml += "<td>" + change.id + "</td>";
+                            formatHtml += "<td>" + change.name + "</td>";
+                            formatHtml += "<td>" + change.email + "</td>";
+                            formatHtml += "<td>" + change.birthDate + "</td>";
+                            formatHtml += "<td>" + change.who + "</td>";
+                            formatHtml += "</tr>";
+                        }
+                        formatHtml += "</table>";
+                        $("#customerHistoryData").html(formatHtml);
+                    } else {
+                        $("#customerHistoryData").html("No history found.");
+                    }
+                } catch (e) {
+                    $("#customerHistoryData").html("An error occurred: " + e.message);
                 }
-                formatHtml += "</table>";
-                $("#customerHistoryData").html(formatHtml);
             });
         });
-</script>
+    </script>
 }
