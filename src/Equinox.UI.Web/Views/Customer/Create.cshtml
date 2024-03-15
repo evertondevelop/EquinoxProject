@@ -1,7 +1,21 @@
+@* 
+    This is a Razor view file for creating a new customer. It uses the CustomerViewModel
+    provided by the Equinox.Application.ViewModels namespace. The view displays a form
+    for user input, including fields for the customer's name, email, and birth date.
+
+    The view uses tag helpers, which are HTML helpers that allow you to create server-side
+    code within your HTML. This makes it easier to create strongly-typed views and reduces
+    the need for manual JavaScript code.
+
+    The view also includes a custom ViewComponent for displaying validation summary.
+*@
+
 @model Equinox.Application.ViewModels.CustomerViewModel
 
 @{
     ViewData["Title"] = "Register new Customer";
+    // ViewData is a dictionary that allows you to pass data from the controller to the view.
+    // In this case, it sets the page title to "Register new Customer".
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -12,6 +26,8 @@
 
         @* Replacing classic Validation Summary to Custom ViewComponent as TagHelper *@
         <vc:summary />
+        // This line renders a custom ViewComponent named "summary". ViewComponents are reusable
+        // components that encapsulate HTML markup and server-side logic.
 
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
@@ -36,17 +52,7 @@
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
         </div>
-       
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-success" />
-                <a asp-action="Index" class="btn btn-info">Back to List</a>
-            </div>
-        </div>
-    </div>
-</form>
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+                <input type="submit" value="Create
