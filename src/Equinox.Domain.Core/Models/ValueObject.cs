@@ -9,14 +9,16 @@ namespace Equinox.Domain.Core.Models
         /// <summary>
         /// Determines whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns>True if the current object is equal to the obj parameter; otherwise, false.</returns>
-        public override bool Equals(object obj)
+        /// <param name="other">The object to compare with the current object.</param>
+        /// <returns>True if the current object is equal to the other parameter; otherwise, false.</returns>
+        public bool Equals(T other)
         {
-            /// Check if the object is of type T and assign it to a variable of type T.
-            var valueObject = obj as T;
-            /// Call the protected abstract method EqualsCore to perform the comparison.
-            return EqualsCore(valueObject);
+            if (other == null)
+            {
+                return false;
+            }
+
+            return EqualsCore(other);
         }
 
         /// <summary>
@@ -32,7 +34,6 @@ namespace Equinox.Domain.Core.Models
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            /// Call the protected abstract method GetHashCodeCore to generate the hash code.
             return GetHashCodeCore();
         }
 
@@ -45,4 +46,27 @@ namespace Equinox.Domain.Core.Models
         /// <summary>
         /// Equality operator for Value Objects.
         /// </summary>
-       
+        public static bool operator ==(ValueObject<T> left, ValueObject<T> right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Inequality operator for Value Objects.
+        /// </summary>
+        public static bool operator !=(ValueObject<T> left, ValueObject<T> right)
+        {
+            return !(left == right);
+        }
+    }
+}
