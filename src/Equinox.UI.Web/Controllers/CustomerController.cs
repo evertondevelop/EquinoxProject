@@ -1,120 +1,122 @@
 using System;
 using System.Threading.Tasks;
-using Equinox.Application.Interfaces;
-using Equinox.Application.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using NetDevPack.Identity.Authorization;
+using Equinox.Application.Interfaces; // Interface for CustomerAppService
+using Equinox.Application.ViewModels; // ViewModels for Customer
+using Microsoft.AspNetCore.Authorization; // For authorization attributes
+using Microsoft.AspNetCore.Mvc; // For controller and action results
+using NetDevPack.Identity.Authorization; // For custom authorization attributes
 
-namespace Equinox.UI.Web.Controllers
+namespace Equinox.UI.Web.Controllers // Equinox UI Web Controllers namespace
 {
-    [Authorize]
-    public class CustomerController : BaseController
+    [Authorize] // Authorize all actions in this controller
+    public class CustomerController : BaseController // Inherits from BaseController
     {
-        private readonly ICustomerAppService _customerAppService;
+        private readonly ICustomerAppService _customerAppService; // CustomerAppService instance
 
-        public CustomerController(ICustomerAppService customerAppService)
+        public CustomerController(ICustomerAppService customerAppService) // Constructor
         {
-            _customerAppService = customerAppService;
+            _customerAppService = customerAppService; // Inject ICustomerAppService
         }
-        [AllowAnonymous]
+
+        [AllowAnonymous] // Allow anonymous access
         [HttpGet("customer-management/list-all")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() // Index action
         {
-            return View(await _customerAppService.GetAll());
+            var customers = await _customerAppService.GetAll(); // Get all customers
+            return View(customers); // Return the view with customers
         }
 
-        [AllowAnonymous]
+        [AllowAnonymous] // Allow anonymous access
         [HttpGet("customer-management/customer-details/{id:guid}")]
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id) // Details action
         {
-            if (id == null) return NotFound();
+            if (id == null) return NotFound(); // If id is null, return 404
 
-            var customerViewModel = await _customerAppService.GetById(id.Value);
+            var customerViewModel = await _customerAppService.GetById(id.Value); // Get customer by id
 
-            if (customerViewModel == null) return NotFound();
+            if (customerViewModel == null) return NotFound(); // If customer is null, return 404
 
-            return View(customerViewModel);
+            return View(customerViewModel); // Return the view with customer
         }
 
-        [CustomAuthorize("Customers", "Write")]
+        [CustomAuthorize("Customers", "Write")] // Custom authorization attribute
         [HttpGet("customer-management/register-new")]
-        public IActionResult Create()
+        public IActionResult Create() // Create action
         {
-            return View();
+            return View(); // Return the create view
         }
 
-        [CustomAuthorize("Customers", "Write")]
+        [CustomAuthorize("Customers", "Write")] // Custom authorization attribute
         [HttpPost("customer-management/register-new")]
-        public async Task<IActionResult> Create(CustomerViewModel customerViewModel)
+        public async Task<IActionResult> Create(CustomerViewModel customerViewModel) // Create action
         {
-            if (!ModelState.IsValid) return View(customerViewModel);
-            
+            if (!ModelState.IsValid) return View(customerViewModel); // If model state is not valid, return the view with customerViewModel
+
             if (ResponseHasErrors(await _customerAppService.Register(customerViewModel)))
-                return View(customerViewModel);
+                return View(customerViewModel); // If there are errors during registration, return the view with customerViewModel
 
-            ViewBag.Sucesso = "Customer Registered!";
+            ViewBag.Sucesso = "Customer Registered!"; // Set success message
 
-            return View(customerViewModel);
+            return View(customerViewModel); // Return the view with customerViewModel
         }
 
-        [CustomAuthorize("Customers", "Write")]
+        [CustomAuthorize("Customers", "Write")] // Custom authorization attribute
         [HttpGet("customer-management/edit-customer/{id:guid}")]
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id) // Edit action
         {
-            if (id == null) return NotFound();
+            if (id == null) return NotFound(); // If id is null, return 404
 
-            var customerViewModel = await _customerAppService.GetById(id.Value);
+            var customerViewModel = await _customerAppService.GetById(id.Value); // Get customer by id
 
-            if (customerViewModel == null) return NotFound();
+            if (customerViewModel == null) return NotFound(); // If customer is null, return 404
 
-            return View(customerViewModel);
+            return View(customerViewModel); // Return the view with customerViewModel
         }
 
-        [CustomAuthorize("Customers", "Write")]
+        [CustomAuthorize("Customers", "Write")] // Custom authorization attribute
         [HttpPost("customer-management/edit-customer/{id:guid}")]
-        public async Task<IActionResult> Edit(CustomerViewModel customerViewModel)
+        public async Task<IActionResult> Edit(CustomerViewModel customerViewModel) // Edit action
         {
-            if (!ModelState.IsValid) return View(customerViewModel);
-            
+            if (!ModelState.IsValid) return View(customerViewModel); // If model state is not valid, return the view with customerViewModel
+
             if (ResponseHasErrors(await _customerAppService.Update(customerViewModel)))
-                return View(customerViewModel);
+                return View(customerViewModel); // If there are errors during update, return the view with customerViewModel
 
-            ViewBag.Sucesso = "Customer Updated!";
+            ViewBag.Sucesso = "Customer Updated!"; // Set success message
 
-            return View(customerViewModel);
+            return View(customerViewModel); // Return the view with customerViewModel
         }
 
-        [CustomAuthorize("Customers", "Remove")]
+        [CustomAuthorize("Customers", "Remove")] // Custom authorization attribute
         [HttpGet("customer-management/remove-customer/{id:guid}")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? id) // Delete action
         {
-            if (id == null) return NotFound();
+            if (id == null) return NotFound(); // If id is null, return 404
 
-            var customerViewModel = await _customerAppService.GetById(id.Value);
+            var customerViewModel = await _customerAppService.GetById(id.Value); // Get customer by id
 
-            if (customerViewModel == null) return NotFound();
+            if (customerViewModel == null) return NotFound(); // If customer is null, return 404
 
-            return View(customerViewModel);
+            return View(customerViewModel); // Return the view with customerViewModel
         }
 
-        [CustomAuthorize("Customers", "Remove")]
+        [CustomAuthorize("Customers", "Remove")] // Custom authorization attribute
         [HttpPost("customer-management/remove-customer/{id:guid}"), ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id) // DeleteConfirmed action
         {
             if (ResponseHasErrors(await _customerAppService.Remove(id)))
-                return View(await _customerAppService.GetById(id));
+                return View(await _customerAppService.GetById(id)); // If there are errors during delete, return the view with customerViewModel
 
-            ViewBag.Sucesso = "Customer Removed!";
-            return RedirectToAction("Index");
+            ViewBag.Sucesso = "Customer Removed!"; // Set success message
+            return RedirectToAction("Index"); // Redirect to Index action
         }
 
-        [AllowAnonymous]
+        [AllowAnonymous] // Allow anonymous access
         [HttpGet("customer-management/customer-history/{id:guid}")]
-        public async Task<JsonResult> History(Guid id)
+        public async Task<JsonResult> History(Guid id) // History action
         {
-            var customerHistoryData = await _customerAppService.GetAllHistory(id);
-            return Json(customerHistoryData);
+            var customerHistoryData = await _customerAppService.GetAllHistory(id); // Get all customer history
+            return Json(customerHistoryData); // Return Json result with customer history data
         }
     }
 }
