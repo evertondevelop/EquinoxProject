@@ -1,8 +1,15 @@
-title: The Equinox Project
-description: Full ASP.NET Core 3.1 application with DDD, CQRS and Event Sourcing
-google_analytics: 
-show_downloads: true
-theme: jekyll-theme-cayman
+/// <summary>
+/// The Equinox Project is a full ASP.NET Core 3.1 application that demonstrates the implementation of Domain-Driven Design (DDD), Command Query Responsibility Segregation (CQRS), and Event Sourcing.
+/// </summary>
 
-gems:
-  - jekyll-mentions
+/// <summary>
+/// This Jekyll configuration file sets up the Equinox Project's documentation site.
+/// </summary>
+/// <remarks>
+/// The file specifies the theme, gems, and other settings for the site.
+/// </remarks>
+
+/// <summary>
+/// The 'jekyll-mentions' gem is included to enable the use of @mentions in the documentation.
+/// </summary>
+
