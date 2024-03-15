@@ -1,64 +1,67 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Equinox.Domain.Interfaces; // Importing the interface namespace
-using Equinox.Domain.Models; // Importing the models namespace
-using Equinox.Infra.Data.Context; // Importing the data context namespace
-using Microsoft.EntityFrameworkCore; // Importing the Entity Framework Core namespace
-using NetDevPack.Data; // Importing the NetDevPack data namespace
+using Equinox.Domain.Interfaces;
+using Equinox.Domain.Models;
+using Equinox.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using NetDevPack.Data;
 
-namespace Equinox.Infra.Data.Repository // Defining the repository namespace
+namespace Equinox.Infra.Data.Repository
 {
-    public class CustomerRepository : ICustomerRepository // Implementing the ICustomerRepository interface
+    public class CustomerRepository : ICustomerRepository
     {
-        // Declaring the EquinoxContext object and DbSet for Customer
-        protected readonly EquinoxContext Db;
-        protected readonly DbSet<Customer> DbSet;
+        private readonly EquinoxContext _dbContext;
+        private readonly DbSet<Customer> _dbSet;
 
-        // Constructor with dependency injection of EquinoxContext
-        public CustomerRepository(EquinoxContext context)
+        public CustomerRepository(EquinoxContext dbContext)
         {
-            Db = context;
-            DbSet = Db.Set<Customer>();
+            _dbContext = dbContext;
+            _dbSet = _dbContext.Set<Customer>();
         }
 
-        // Implementing the IUnitOfWork interface from the Domain layer
-        public IUnitOfWork UnitOfWork => Db;
+        public IUnitOfWork UnitOfWork => _dbContext;
 
-        // Implementing the GetById method from the ICustomerRepository interface
         public async Task<Customer> GetById(Guid id)
         {
-            return await DbSet.FindAsync(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        // Implementing the GetAll method from the ICustomerRepository interface
         public async Task<IEnumerable<Customer>> GetAll()
         {
-            return await DbSet.ToListAsync();
+            return await _dbSet.ToListAsync();
         }
 
-        // Implementing the GetByEmail method from the ICustomerRepository interface
         public async Task<Customer> GetByEmail(string email)
         {
-            return await DbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Email == email);
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Email == email);
         }
 
-        // Implementing the Add method from the ICustomerRepository interface
         public void Add(Customer customer)
         {
-            DbSet.Add(customer);
+            _dbSet.Add(customer);
         }
 
-        // Implementing the Update method from the ICustomerRepository interface
         public void Update(Customer customer)
         {
-            DbSet.Update(customer);
+            _dbSet.Update(customer);
         }
 
-        // Implementing the Remove method from the ICustomerRepository interface
         public void Remove(Customer customer)
         {
-            DbSet.Remove(customer);
+            _dbSet.Remove(customer);
         }
 
-        //
+        public IQueryable<Customer> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
+
+        public IQueryable<Customer> GetQueryable(Expression<Func<Customer, bool>> predicate)
+        {
+            return _dbSet.Where(predicate);
+        }
+    }
+}
