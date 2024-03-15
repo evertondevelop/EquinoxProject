@@ -28,12 +28,12 @@ namespace Equinox.Application.EventSourcedNormalizers
         /// <summary>
         /// The birthdate of the customer.
         /// </summary>
-        public string BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         /// <summary>
         /// The timestamp of when the customer's history event occurred.
         /// </summary>
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         /// <summary>
         /// The unique identifier of the user who performed the action for the customer's history event.
