@@ -20,13 +20,13 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Create">
+<form asp-action="Create" method="post">
     <div class="form-horizontal">
         <hr />
 
         @* Replacing classic Validation Summary to Custom ViewComponent as TagHelper *@
-        <vc:summary />
-        // This line renders a custom ViewComponent named "summary". ViewComponents are reusable
+        <vc:validation-summary />
+        // This line renders a custom ViewComponent named "validation-summary". ViewComponents are reusable
         // components that encapsulate HTML markup and server-side logic.
 
         <div class="form-group">
@@ -55,4 +55,9 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create
+                <input type="submit" value="Create" class="btn btn-primary" />
+                // Added Bootstrap class "btn btn-primary" to the submit button
+            </div>
+        </div>
+    </div>
+</form>
