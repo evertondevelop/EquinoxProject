@@ -1,16 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-	<TargetFramework>net5.0</TargetFramework>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Equinox.Domain\Equinox.Domain.csproj" />
-		<ProjectReference Include="..\Equinox.Infra.Data\Equinox.Infra.Data.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Equinox.Domain\Equinox.Domain.csproj" />
+    <ProjectReference Include="..\Equinox.Infra.Data\Equinox.Infra.Data.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="10.1.1" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+  </ItemGroup>
 
 </Project>
