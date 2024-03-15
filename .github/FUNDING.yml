@@ -1,3 +1,14 @@
-# These are supported funding model platforms
+# Supported Funding Model Platforms
+# ---------------------------------
+#
+# This section of the code specifies the supported funding model platforms for the developer.
+# Currently, only Patreon is supported.
+#
+# Format:
+#   [platform]: [username]
+#
+# Example:
+#   patreon: eduardopires
 
 patreon: eduardopires
+
