@@ -1,23 +1,38 @@
-﻿@using Microsoft.AspNetCore.Http.Features
-
 @{
+    // Get the ITrackingConsentFeature instance from the HttpContext.Features collection
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+
+    // Create a variable to store whether the tracking consent banner should be shown
+    // If the ITrackingConsentFeature instance is null or its CanTrack property is true, showBanner will be false
     var showBanner = !consentFeature?.CanTrack ?? false;
+
+    // Create a variable to store the consent cookie string
+    // This string will be used to create the consent cookie when the user accepts the tracking policy
     var cookieString = consentFeature?.CreateConsentCookie();
 }
 
+@* Check if the tracking consent banner should be shown *@
 @if (showBanner)
 {
     <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
+        @* Summarize your privacy and cookie use policy here *@
         Use this space to summarize your privacy and cookie use policy. <a asp-page="/Privacy">Learn More</a>.
+
+        @* Create a button to accept the tracking policy *@
         <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
             <span aria-hidden="true">Accept</span>
         </button>
     </div>
+
+    @* Add a script to create the consent cookie when the user clicks the accept button *@
     <script>
         (function () {
+            // Get the accept button
             var button = document.querySelector("#cookieConsent button[data-cookie-string]");
+
+            // Add a click event listener to the accept button
             button.addEventListener("click", function (event) {
+                // Create the consent cookie using the cookie string
                 document.cookie = button.dataset.cookieString;
             }, false);
         })();
