@@ -1,4 +1,6 @@
-﻿using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Equinox.Domain.Models;
 using Equinox.Infra.Data.Mappings;
@@ -33,22 +35,25 @@ namespace Equinox.Infra.Data.Context
                 e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
                 property.SetColumnType("varchar(100)");
 
+            modelBuilder.Entity<Customer>().Property(p => p.RowVersion).IsConcurrencyToken();
+            modelBuilder.Entity<Customer>().Property(p => p.Name).IsRequired();
+
             modelBuilder.ApplyConfiguration(new CustomerMap());
-                        
+
             base.OnModelCreating(modelBuilder);
         }
 
         public async Task<bool> Commit()
         {
-            // Dispatch Domain Events collection. 
+            // Dispatch Domain Events collection.
             // Choices:
-            // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including  
+            // A) Right BEFORE committing data (EF SaveChanges) into the DB will make a single transaction including
             // side effects from the domain event handlers which are using the same DbContext with "InstancePerLifetimeScope" or "scoped" lifetime
-            // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions. 
-            // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers. 
+            // B) Right AFTER committing data (EF SaveChanges) into the DB will make multiple transactions.
+            // You will need to handle eventual consistency and compensatory actions in case of failures in any of the Handlers.
             await _mediatorHandler.PublishDomainEvents(this).ConfigureAwait(false);
 
-            // After executing this line all the changes (from the Command Handler and Domain Event Handlers) 
+            // After executing this line all the changes (from the Command Handler and Domain Event Handlers)
             // performed through the DbContext will be committed
             var success = await SaveChangesAsync() > 0;
 
@@ -73,7 +78,14 @@ namespace Equinox.Infra.Data.Context
 
             var tasks = domainEvents
                 .Select(async (domainEvent) => {
-                    await mediator.PublishEvent(domainEvent);
+                    try
+                    {
+                        await mediator.PublishEvent(domainEvent);
+                    }
+                    catch
+                    {
+                        // Handle exceptions here
+                    }
                 });
 
             await Task.WhenAll(tasks);
