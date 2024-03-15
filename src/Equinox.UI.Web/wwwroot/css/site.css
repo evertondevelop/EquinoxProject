@@ -1,53 +1,45 @@
-<!---
-Reference the Microsoft documentation for bundling and minification of static web assets:
-https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
---->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Code</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar Brand</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-<-- The navbar brand element is styled to have normal white-space, centered text, and word-break applied to it. -->
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
+    <!-- Main Content -->
+    <main class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Welcome to Our Website</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.</p>
+                <button type="button" class="btn btn-primary accept-policy">Accept Policy</button>
+            </div>
+            <div class="col-md-6">
+                <img src="image.jpg" alt="Image" class="img-fluid">
+            </div>
+        </div>
+    </main>
 
-<-- The a element is styled to provide sufficient contrast against the white background with a blue color. --->
-a {
-  color: #0366d6;
-}
-
-<-- The btn-primary class styles the primary button with white text, blue background, and blue border. -->
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-<-- The nav-pills .nav-link.active and .nav-pills .show > .nav-link elements are styled to have white text, blue background, and blue border. -->
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-<-- Sticky footer styles for the HTML element. -->
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-<-- The border-top, border-bottom, and box-shadow classes provide borders and box-shadow effects. -->
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-<-- The button.accept-policy class styles the accept
+    <!-- Footer
