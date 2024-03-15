@@ -1,49 +1,40 @@
-﻿using Equinox.Application.Interfaces;
-using Equinox.Application.Services;
-using Equinox.Domain.Commands;
-using Equinox.Domain.Core.Events;
-using Equinox.Domain.Events;
-using Equinox.Domain.Interfaces;
-using Equinox.Infra.CrossCutting.Bus;
-using Equinox.Infra.Data.Context;
-using Equinox.Infra.Data.EventSourcing;
-using Equinox.Infra.Data.Repository;
-using Equinox.Infra.Data.Repository.EventSourcing;
-using FluentValidation.Results;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using NetDevPack.Mediator;
+using Equinox.Application.Interfaces; // Equinox application interfaces namespace
+using Equinox.Application.Services; // Equinox application services namespace
+using Equinox.Domain.Commands; // Equinox domain commands namespace
+using Equinox.Domain.Core.Events; // Equinox domain core events namespace
+using Equinox.Domain.Events; // Equinox domain events namespace
+using Equinox.Domain.Interfaces; // Equinox domain interfaces namespace
+using Equinox.Infra.CrossCutting.Bus; // Equinox infrastructure cross-cutting bus namespace
+using Equinox.Infra.Data.Context; // Equinox infrastructure data context namespace
+using Equinox.Infra.Data.EventSourcing; // Equinox infrastructure data event sourcing namespace
+using Equinox.Infra.Data.Repository; // Equinox infrastructure data repository namespace
+using Equinox.Infra.Data.Repository.EventSourcing; // Equinox infrastructure data repository event sourcing namespace
+using FluentValidation.Results; // FluentValidation results namespace
+using MediatR; // MediatR namespace
+using Microsoft.Extensions.DependencyInjection; // Microsoft.Extensions.DependencyInjection namespace
+using NetDevPack.Mediator; // NetDevPack Mediator namespace
 
-namespace Equinox.Infra.CrossCutting.IoC
+namespace Equinox.Infra.CrossCutting.IoC // Equinox infrastructure cross-cutting IoC namespace
 {
-    public static class NativeInjectorBootStrapper
+    public static class NativeInjectorBootStrapper // NativeInjectorBootStrapper class
     {
-        public static void RegisterServices(IServiceCollection services)
+        public static void RegisterServices(IServiceCollection services) // RegisterServices method
         {
-            // Domain Bus (Mediator)
-            services.AddScoped<IMediatorHandler, InMemoryBus>();
+            // Registering Domain Bus (Mediator)
+            services.AddScoped<IMediatorHandler, InMemoryBus>(); // Registering InMemoryBus as a scoped service for IMediatorHandler
 
-            // Application
-            services.AddScoped<ICustomerAppService, CustomerAppService>();
+            // Registering Application services
+            services.AddScoped<ICustomerAppService, CustomerAppService>(); // Registering CustomerAppService as a scoped service for ICustomerAppService
 
-            // Domain - Events
-            services.AddScoped<INotificationHandler<CustomerRegisteredEvent>, CustomerEventHandler>();
-            services.AddScoped<INotificationHandler<CustomerUpdatedEvent>, CustomerEventHandler>();
-            services.AddScoped<INotificationHandler<CustomerRemovedEvent>, CustomerEventHandler>();
+            // Registering Domain - Events
+            services.AddScoped<INotificationHandler<CustomerRegisteredEvent>, CustomerEventHandler>(); // Registering CustomerEventHandler as a scoped service for INotificationHandler<CustomerRegisteredEvent>
+            services.AddScoped<INotificationHandler<CustomerUpdatedEvent>, CustomerEventHandler>(); // Registering CustomerEventHandler as a scoped service for INotificationHandler<CustomerUpdatedEvent>
+            services.AddScoped<INotificationHandler<CustomerRemovedEvent>, CustomerEventHandler>(); // Registering CustomerEventHandler as a scoped service for INotificationHandler<CustomerRemovedEvent>
 
-            // Domain - Commands
-            services.AddScoped<IRequestHandler<RegisterNewCustomerCommand, ValidationResult>, CustomerCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateCustomerCommand, ValidationResult>, CustomerCommandHandler>();
-            services.AddScoped<IRequestHandler<RemoveCustomerCommand, ValidationResult>, CustomerCommandHandler>();
+            // Registering Domain - Commands
+            services.AddScoped<IRequestHandler<RegisterNewCustomerCommand, ValidationResult>, CustomerCommandHandler>(); // Registering CustomerCommandHandler as a scoped service for IRequestHandler<RegisterNewCustomerCommand, ValidationResult>
+            services.AddScoped<IRequestHandler<UpdateCustomerCommand, ValidationResult>, CustomerCommandHandler>(); // Registering CustomerCommandHandler as a scoped service for IRequestHandler<UpdateCustomerCommand, ValidationResult>
+            services.AddScoped<IRequestHandler<RemoveCustomerCommand, ValidationResult>, CustomerCommandHandler>(); // Registering CustomerCommandHandler as a scoped service for IRequestHandler<RemoveCustomerCommand, ValidationResult>
 
-            // Infra - Data
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-            services.AddScoped<EquinoxContext>();
-
-            // Infra - Data EventSourcing
-            services.AddScoped<IEventStoreRepository, EventStoreSqlRepository>();
-            services.AddScoped<IEventStore, SqlEventStore>();
-            services.AddScoped<EventStoreSqlContext>();
-        }
-    }
-}
+            // Registering Infra - Data repositories
+            services.AddScoped<ICustomerRepository, CustomerRepository>(); // Registering CustomerRepository as a scoped service for I
