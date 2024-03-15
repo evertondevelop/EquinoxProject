@@ -5,10 +5,9 @@ namespace Equinox.Domain.Commands // Namespace for Equinox's command-related fun
 {
     public class RemoveCustomerCommand : CustomerCommand // Inherits from CustomerCommand base class
     {
-        public RemoveCustomerCommand(Guid id) // Constructor with a single parameter: the customer's ID
+        public RemoveCustomerCommand(Guid customerId) : base(customerId) // Constructor with a single parameter: the customer's ID
         {
-            Id = id; // Assigns the provided ID to the 'Id' property
-            AggregateId = id; // Assigns the provided ID to the 'AggregateId' property
+            AggregateId = customerId; // Assigns the provided ID to the 'AggregateId' property
         }
 
         public override bool IsValid() // Overrides the base class's 'IsValid' method
